@@ -1,0 +1,353 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Nikud with Moti Vation</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#6366f1">
+
+<style>
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: linear-gradient(135deg, #f6f8ff, #eef2ff);
+  color: #111827;
+}
+
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 32px 20px 60px;
+}
+
+h1 {
+  font-size: 32px;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+/* Toolbar */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+button {
+  border: none;
+  border-radius: 999px;
+  padding: 10px 18px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: transform 0.05s ease, opacity 0.15s ease;
+}
+
+button:hover { opacity: 0.9; }
+button:active { transform: scale(0.97); }
+
+.btn-open  { background:#6366f1; color:white; }
+.btn-paste { background:#996633; color:white; }
+.btn-copy  { background:#22c55e; color:white; }
+
+/* Layout */
+.main-layout {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 20px;
+}
+
+.card {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+}
+
+.card h4 {
+  font-size: 22px;
+  margin: 0 0 14px;
+}
+
+textarea {
+  flex: 1;
+  resize: vertical;
+  min-height: 320px;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  line-height: 1.7;
+  font-family: inherit;
+}
+
+/* Info text */
+.info-text {
+  font-size: 15px;
+  line-height: 1.7;
+  color: #374151;
+}
+
+/* Flashcards promo */
+.flashcards {
+  margin: 40px 0;
+  padding: 20px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #6366f1, #22c55e);
+  color: white;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.flashcards strong {
+  font-size: 18px;
+}
+
+.flashcards a {
+  background: white;
+  color: #111827;
+  text-decoration: none;
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+/* Marketing */
+.marketing {
+  margin-top: 40px;
+  text-align: center;
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.marketing strong {
+  font-size: 20px;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.contact {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.contact a {
+  text-decoration: none;
+  font-size: 20px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: #e5e7eb;
+  color: #111827;
+}
+
+.contact a:hover {
+  background: #d1d5db;
+}
+
+
+.contact a {
+  color: white;
+  font-weight: 600;
+}
+
+/* Facebook */
+.contact a.facebook {
+  background: #1877f2;
+}
+
+/* Instagram */
+.contact a.instagram {
+  background: linear-gradient(45deg, #f58529, #dd2a7b, #8134af);
+}
+
+/* WhatsApp */
+.contact a.whatsapp {
+  background: #25d366;
+}
+
+/* Email */
+.contact a.email {
+  background: #6b7280; /* אפור נקי, רציני */
+}
+
+/* Hover */
+.contact a:hover {
+  opacity: 0.9;
+}
+
+/* Mobile */
+@media (max-width: 900px) {
+  .main-layout {
+    grid-template-columns: 1fr;
+  }
+  .info-card {
+    order: -1;
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<div class="main-layout">
+
+  <div class="card info-card">
+    <h1>Nikud<br>with Moti Vation</h1>
+    <div class="info-text">
+
+	Learning Hebrew is challenging.<br><br>
+
+	The vowel system is complex, and it’s hard to find texts with Nikud.<br>
+	For non-native speakers, vowelization is a necessity—but it can be overwhelming.<br><br>
+
+	This filter simplifies Nikud.<br>
+	Only five core vowel signs remain,<br>
+	making reading smoother and pronunciation clearer.<br><br>
+
+	INSTRUCTIONS<br>
+	1. If needed, vowelize your text using DICTA.<br>
+	2. Paste it.<br>
+	3. Enjoy.
+
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="toolbar">
+      <button class="btn-open" onclick="openDicta()">DICTA</button>
+      <button class="btn-paste" onclick="pasteFromClipboard()">Paste</button>
+      <button class="btn-copy" onclick="copyText()">Copy</button>
+    </div>
+
+    <textarea id="input" placeholder="Paste vocalized Hebrew text here…"></textarea>
+  </div>
+
+</div>
+
+
+
+<div class="contact">
+  <a class="facebook" href="https://www.facebook.com/share/1D6uJLL5nK/" target="_blank">Facebook</a>
+  <a class="instagram" href="https://www.instagram.com/hebrew_with_motivation" target="_blank">Instagram</a>
+  <a class="email" href="mailto:Mottex@gmail.com">Email</a>
+  <a class="whatsapp" href="https://wa.me/48604726360" target="_blank">WhatsApp</a>
+</div>
+
+
+
+<div class="marketing">
+  <strong>Hebrew with Moti Vation</strong>
+  I'm here - No Fear<br>
+  Hebrew will become so clear<br>
+  Online sessions from the comfort of your home<br>
+  Begginers / Advanced / Individuals / Groups<br>
+  Fun &amp; Interesting lessons<br>
+  I love languages and I love teaching<br>
+  Lets go on adventure..<br>
+  Cake Eat Easy<br>
+  Take care - Take air
+
+
+<div class="flashcards">
+  <strong>🎮 Learn Hebrew with interactive Flashcards Game - I made it and it's Free</strong>
+  <a href="https://motimorphoza.github.io/FlashCards-with-MotiVation/" target="_blank">
+    Open Flashcards
+  </a>
+</div>
+</div>
+
+</div>
+
+<script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js");
+}
+
+const SHEVA = "\u05B0";
+const HATAF_SEGOL = "\u05B1";
+const HATAF_PATAH = "\u05B2";
+const HATAF_QAMATS = "\u05B3";
+const TSERE = "\u05B5";
+const SEGOL = "\u05B6";
+const PATAH = "\u05B7";
+const QAMATS = "\u05B8";
+const HOLAM = "\u05B9";
+const QUBUTS = "\u05BB";
+const DAGESH = "\u05BC";
+const SHIN_RIGHT = "\u05C1";
+
+function simplify(text) {
+  let out = "";
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    const prev = out[out.length - 1];
+
+    if (ch === SHEVA || ch === SHIN_RIGHT) continue;
+    if (ch === PATAH) { out += QAMATS; continue; }
+    if (ch === TSERE) { out += SEGOL; continue; }
+    if (ch === HATAF_PATAH || ch === HATAF_QAMATS) { out += QAMATS; continue; }
+    if (ch === HATAF_SEGOL) { out += SEGOL; continue; }
+
+    if (ch === QUBUTS) {
+      if (prev !== "ו") out += "ו";
+      out += DAGESH;
+      continue;
+    }
+
+    if (ch === HOLAM) {
+      if (prev !== "ו") out += "ו";
+      out += HOLAM;
+      continue;
+    }
+
+    if (ch === DAGESH && !["ב","כ","פ","ו"].includes(prev)) continue;
+    out += ch;
+  }
+  return fixSequences(out.normalize("NFC"));
+}
+
+function fixSequences(text) {
+  return text
+    .replace(/לוֹא/g, "לֹא")
+    .replace(/פּ?וֹה/g, "פֹּה")
+    .replace(/זוֹאת/g, "זֹאת")
+    .replace(/רוֹאש/g, "רֹאש");
+}
+
+const inputEl = document.getElementById("input");
+inputEl.addEventListener("input", () => {
+  inputEl.value = simplify(inputEl.value);
+});
+
+function openDicta() {
+  window.open("https://nakdan.dicta.org.il/", "_blank");
+}
+
+async function pasteFromClipboard() {
+  try {
+    const text = await navigator.clipboard.readText();
+    inputEl.value = simplify(text);
+  } catch {
+    alert("Paste manually (Ctrl+V) or open via http/online.");
+  }
+}
+
+function copyText() {
+  navigator.clipboard.writeText(inputEl.value);
+}
+</script>
+
+</body>
+</html>
+```
