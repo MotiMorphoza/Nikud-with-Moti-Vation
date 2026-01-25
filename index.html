@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -52,6 +51,7 @@ button:active { transform: scale(0.97); }
 .btn-open  { background:#6366f1; color:white; }
 .btn-paste { background:#996633; color:white; }
 .btn-copy  { background:#22c55e; color:white; }
+.btn-clear { background:#ef4444; color:white; }
 
 /* Layout */
 .main-layout {
@@ -146,44 +146,16 @@ textarea {
   font-size: 20px;
   padding: 8px 14px;
   border-radius: 999px;
-  background: #e5e7eb;
-  color: #111827;
-}
-
-.contact a:hover {
-  background: #d1d5db;
-}
-
-
-.contact a {
   color: white;
   font-weight: 600;
 }
 
-/* Facebook */
-.contact a.facebook {
-  background: #1877f2;
-}
+.contact a.facebook { background: #1877f2; }
+.contact a.instagram { background: linear-gradient(45deg, #f58529, #dd2a7b, #8134af); }
+.contact a.whatsapp { background: #25d366; }
+.contact a.email { background: #6b7280; }
 
-/* Instagram */
-.contact a.instagram {
-  background: linear-gradient(45deg, #f58529, #dd2a7b, #8134af);
-}
-
-/* WhatsApp */
-.contact a.whatsapp {
-  background: #25d366;
-}
-
-/* Email */
-.contact a.email {
-  background: #6b7280; /* אפור נקי, רציני */
-}
-
-/* Hover */
-.contact a:hover {
-  opacity: 0.9;
-}
+.contact a:hover { opacity: 0.9; }
 
 /* Mobile */
 @media (max-width: 900px) {
@@ -205,20 +177,13 @@ textarea {
   <div class="card info-card">
     <h1>Nikud<br>with Moti Vation</h1>
     <div class="info-text">
-
-	Hebrew is challenging.<br>
-	The vowel system is complex.<br><br>
-
-	This filter simplifies Nikud.<br><br>
-		
-	Only five vowels remain,<br>
-	making reading smoother and pronunciation clearer.<br><br>
-
-	INSTRUCTIONS<br>
-	1. If needed, vowelize your text using DICTA.<br>
-	2. Paste it.<br>
-	3. Enjoy.
-
+      This filter simplifies Nikud.<br><br>
+      Only five core vowel signs remain,<br>
+      making reading smoother and pronunciation clearer.<br><br>
+      INSTRUCTIONS<br>
+      1. If needed, vowelize your text using DICTA.<br>
+      2. Paste it.<br>
+      3. Enjoy.
     </div>
   </div>
 
@@ -227,6 +192,7 @@ textarea {
       <button class="btn-open" onclick="openDicta()">DICTA</button>
       <button class="btn-paste" onclick="pasteFromClipboard()">Paste</button>
       <button class="btn-copy" onclick="copyText()">Copy</button>
+      <button class="btn-clear" onclick="clearText()">Clear</button>
     </div>
 
     <textarea id="input" placeholder="Paste vocalized Hebrew text here…"></textarea>
@@ -234,16 +200,12 @@ textarea {
 
 </div>
 
-
-
 <div class="contact">
   <a class="facebook" href="https://www.facebook.com/share/1D6uJLL5nK/" target="_blank">Facebook</a>
   <a class="instagram" href="https://www.instagram.com/hebrew_with_motivation" target="_blank">Instagram</a>
   <a class="email" href="mailto:Mottex@gmail.com">Email</a>
   <a class="whatsapp" href="https://wa.me/48604726360" target="_blank">WhatsApp</a>
 </div>
-
-
 
 <div class="marketing">
   <strong>Hebrew with Moti Vation</strong>
@@ -257,13 +219,12 @@ textarea {
   Cake Eat Easy<br>
   Take care - Take air
 
-
-<div class="flashcards">
-  <strong>🎮 Learn Hebrew with interactive Flashcards Game - I made it and it's Free</strong>
-  <a href="https://motimorphoza.github.io/FlashCards-with-MotiVation/" target="_blank">
-    Open Flashcards
-  </a>
-</div>
+  <div class="flashcards">
+    <strong>🎮 Learn Hebrew with interactive Flashcards Game - I made it and it's Free</strong>
+    <a href="https://motimorphoza.github.io/FlashCards-with-MotiVation/" target="_blank">
+      Open Flashcards
+    </a>
+  </div>
 </div>
 
 </div>
@@ -288,33 +249,66 @@ const SHIN_RIGHT = "\u05C1";
 
 function simplify(text) {
   let out = "";
+
   for (let i = 0; i < text.length; i++) {
     const ch = text[i];
     const prev = out[out.length - 1];
 
-    if (ch === SHEVA || ch === SHIN_RIGHT) continue;
-    if (ch === PATAH) { out += QAMATS; continue; }
-    if (ch === TSERE) { out += SEGOL; continue; }
-    if (ch === HATAF_PATAH || ch === HATAF_QAMATS) { out += QAMATS; continue; }
-    if (ch === HATAF_SEGOL) { out += SEGOL; continue; }
+    // מחיקות מוחלטות
+    if (
+      ch === SHEVA ||        // שווא
+      ch === SHIN_RIGHT ||   // שין ימנית
+      ch === HOLAM           // חולם – מוסר לגמרי
+    ) {
+      continue;
+    }
 
+    // פתח וקמץ נשמרים
+    if (ch === PATAH) {
+      out += PATAH;
+      continue;
+    }
+
+    if (ch === QAMATS) {
+      out += QAMATS;
+      continue;
+    }
+
+    // צירה → סגול
+    if (ch === TSERE) {
+      out += SEGOL;
+      continue;
+    }
+
+    // חטפים
+    if (ch === HATAF_PATAH || ch === HATAF_QAMATS) {
+      out += QAMATS;
+      continue;
+    }
+
+    if (ch === HATAF_SEGOL) {
+      continue; // חטף סגול נמחק
+    }
+
+    // קובוץ – ו׳ קריאה בלי ניקוד
     if (ch === QUBUTS) {
       if (prev !== "ו") out += "ו";
-      out += DAGESH;
       continue;
     }
 
-    if (ch === HOLAM) {
-      if (prev !== "ו") out += "ו";
-      out += HOLAM;
+    // דגש – רק בגדכפ״ת רלוונטיים
+    if (ch === DAGESH && !["ב","כ","פ","ו"].includes(prev)) {
       continue;
     }
 
-    if (ch === DAGESH && !["ב","כ","פ","ו"].includes(prev)) continue;
+    // ברירת מחדל
     out += ch;
   }
-  return fixSequences(out.normalize("NFC"));
+
+  return out.normalize("NFC");
 }
+
+
 
 function fixSequences(text) {
   return text
@@ -345,10 +339,12 @@ async function pasteFromClipboard() {
 function copyText() {
   navigator.clipboard.writeText(inputEl.value);
 }
+
+function clearText() {
+  inputEl.value = "";
+  inputEl.focus();
+}
 </script>
 
 </body>
 </html>
-```
-
-
