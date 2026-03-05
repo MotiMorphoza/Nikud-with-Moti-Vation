@@ -1,873 +1,697 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Nikud with Moti Vation</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#1a1209">
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Noto+Serif+Hebrew:wght@400;700&display=swap" rel="stylesheet">
-
-<style>
-/* ── Design Tokens ─────────────────────────────────────────── */
-:root {
-  --ink:       #1a1209;
-  --paper:     #faf6ee;
-  --parchment: #f0e8d0;
-  --amber:     #c8861a;
-  --amber-lt:  #e8a830;
-  --sienna:    #7a3b1e;
-  --teal:      #1a5c54;
-  --teal-lt:   #2a8a7e;
-  --sage:      #e8f0ee;
-  --gold:      #d4a843;
-  --shadow:    rgba(26,18,9,0.14);
-  --radius:    18px;
-
-  --font-display: 'Playfair Display', Georgia, serif;
-  --font-body:    'Libre Baskerville', Georgia, serif;
-  --font-hebrew:  'Noto Serif Hebrew', 'David Libre', serif;
-}
-
-/* ── Reset ─────────────────────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-/* ── Page ──────────────────────────────────────────────────── */
-html { scroll-behavior: smooth; }
-
-body {
-  background-color: var(--paper);
-  background-image:
-    radial-gradient(ellipse 80% 60% at 50% -10%, rgba(212,168,67,.18) 0%, transparent 70%),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-  color: var(--ink);
-  font-family: var(--font-body);
-  min-height: 100vh;
-}
-
-/* ── Ornamental header rule ────────────────────────────────── */
-.page-rule {
-  width: 100%;
-  height: 5px;
-  background: linear-gradient(90deg, transparent, var(--amber), var(--gold), var(--amber), transparent);
-}
-
-/* ── Container ─────────────────────────────────────────────── */
-.container {
-  max-width: 1120px;
-  margin: 0 auto;
-  padding: 44px 24px 80px;
-}
-
-/* ── Masthead ───────────────────────────────────────────────── */
-.masthead {
-  text-align: center;
-  margin-bottom: 48px;
-  animation: fadeUp .6s ease both;
-}
-
-.masthead-hebrew {
-  font-family: var(--font-hebrew);
-  font-size: clamp(15px, 2vw, 20px);
-  color: var(--amber);
-  letter-spacing: 0.12em;
-  margin-bottom: 10px;
-  opacity: .85;
-}
-
-.masthead h1 {
-  font-family: var(--font-display);
-  font-size: clamp(38px, 6vw, 72px);
-  font-weight: 900;
-  line-height: 1;
-  letter-spacing: -0.02em;
-  color: var(--ink);
-}
-
-.masthead h1 em {
-  font-style: italic;
-  color: var(--amber);
-}
-
-.masthead-sub {
-  margin-top: 12px;
-  font-size: 15px;
-  color: #6b5a3e;
-  letter-spacing: 0.05em;
-}
-
-.ornament {
-  display: block;
-  text-align: center;
-  color: var(--amber);
-  font-size: 22px;
-  margin: 18px 0 0;
-  letter-spacing: 0.3em;
-  opacity: .7;
-}
-
-/* ── Main grid ──────────────────────────────────────────────── */
-.workspace {
-  display: grid;
-  grid-template-columns: 340px 1fr;
-  gap: 24px;
-  align-items: start;
-  animation: fadeUp .7s .1s ease both;
-}
-
-/* ── Cards ──────────────────────────────────────────────────── */
-.card {
-  background: white;
-  border-radius: var(--radius);
-  border: 1px solid rgba(200,134,26,.2);
-  box-shadow:
-    0 2px 0 rgba(212,168,67,.35),
-    0 12px 32px var(--shadow);
-  overflow: hidden;
-}
-
-.card-header {
-  padding: 20px 24px 0;
-}
-
-.card-title {
-  font-family: var(--font-display);
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--sienna);
-  border-bottom: 1px solid var(--parchment);
-  padding-bottom: 12px;
-  margin-bottom: 16px;
-}
-
-.card-body {
-  padding: 0 24px 24px;
-}
-
-/* ── Info panel ─────────────────────────────────────────────── */
-.info-card .card-body {
-  padding: 20px 24px 24px;
-}
-
-.steps {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.steps li {
-  display: flex;
-  gap: 14px;
-  align-items: flex-start;
-  font-size: 14px;
-  line-height: 1.6;
-  color: #4a3728;
-}
-
-.step-num {
-  flex-shrink: 0;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  background: var(--amber);
-  color: white;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 13px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 1px;
-}
-
-.step-text strong {
-  display: block;
-  color: var(--ink);
-  font-size: 13px;
-}
-
-.step-text span {
-  font-size: 13px;
-  color: #7a6040;
-}
-
-/* vowel table */
-.vowel-table {
-  margin-top: 20px;
-  border-top: 1px solid var(--parchment);
-  padding-top: 16px;
-}
-
-.vowel-table h5 {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: var(--amber);
-  margin-bottom: 10px;
-}
-
-.vowel-rows {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.vowel-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  color: #5a4530;
-}
-
-.vowel-from {
-  font-family: var(--font-hebrew);
-  font-size: 18px;
-  width: 28px;
-  text-align: center;
-}
-
-.vowel-arrow { color: var(--amber); font-size: 12px; }
-
-.vowel-to {
-  font-family: var(--font-hebrew);
-  font-size: 18px;
-  color: var(--teal);
-}
-
-.vowel-label { font-size: 12px; color: #9a8060; }
-
-/* ── Editor card ────────────────────────────────────────────── */
-.editor-card {
-  display: flex;
-  flex-direction: column;
-}
-
-/* ── Toolbar ────────────────────────────────────────────────── */
-.toolbar {
-  display: flex;
-  gap: 8px;
-  padding: 16px 20px;
-  background: var(--parchment);
-  border-bottom: 1px solid rgba(200,134,26,.15);
-  flex-wrap: wrap;
-}
-
-.btn {
-  border: none;
-  border-radius: 999px;
-  padding: 9px 20px;
-  font-size: 13px;
-  font-family: var(--font-body);
-  font-weight: 700;
-  letter-spacing: .04em;
-  cursor: pointer;
-  transition: transform .08s ease, box-shadow .12s ease, opacity .12s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.btn::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: white;
-  opacity: 0;
-  transition: opacity .12s;
-  border-radius: inherit;
-}
-
-.btn:hover::after  { opacity: .12; }
-.btn:active        { transform: scale(0.96); }
-
-.btn-dicta  { background: var(--ink);    color: var(--amber-lt); box-shadow: 0 3px 0 #000; }
-.btn-paste  { background: var(--sienna); color: #fde8d0;         box-shadow: 0 3px 0 #4a1a08; }
-.btn-copy   { background: var(--teal);   color: #d0f0ec;         box-shadow: 0 3px 0 #0a3028; }
-.btn-clear  { background: #c0392b;       color: #ffe4e0;         box-shadow: 0 3px 0 #7a1008; }
-
-/* ── Textarea wrapper ───────────────────────────────────────── */
-.editor-area {
-  padding: 20px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-textarea {
-  flex: 1;
-  min-height: 340px;
-  border: 1.5px solid rgba(200,134,26,.25);
-  border-radius: 12px;
-  padding: 16px 18px;
-  font-family: var(--font-hebrew);
-  font-size: 22px;
-  line-height: 2;
-  direction: rtl;
-  resize: vertical;
-  color: var(--ink);
-  background: #fffdf8;
-  outline: none;
-  transition: border-color .15s, box-shadow .15s;
-}
-
-textarea:focus {
-  border-color: var(--amber);
-  box-shadow: 0 0 0 3px rgba(200,134,26,.12);
-}
-
-textarea::placeholder {
-  color: #c8b090;
-  direction: rtl;
-  font-size: 17px;
-}
-
-/* status bar */
-.status-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 12px;
-  color: #9a8060;
-  padding: 0 4px;
-  min-height: 20px;
-}
-
-.status-msg {
-  opacity: 0;
-  transform: translateY(2px);
-  transition: opacity .2s, transform .2s;
-  color: var(--teal);
-  font-weight: 700;
-}
-
-.status-msg.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* ── Flash indicator ────────────────────────────────────────── */
-.flash-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(200,134,26,.06);
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity .15s;
-  z-index: 999;
-}
-.flash-overlay.flash { opacity: 1; }
-
-/* ── Footer area ────────────────────────────────────────────── */
-.footer-section {
-  margin-top: 48px;
-  animation: fadeUp .8s .25s ease both;
-}
-
-/* Flashcard promo */
-.flashcard-promo {
-  background: linear-gradient(105deg, var(--ink) 0%, #2a1c08 50%, #0e3028 100%);
-  border-radius: var(--radius);
-  padding: 28px 32px;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 18px;
-  margin-bottom: 36px;
-  border: 1px solid rgba(212,168,67,.3);
-  box-shadow: 0 8px 32px rgba(0,0,0,.22);
-}
-
-.flashcard-promo-text strong {
-  display: block;
-  font-family: var(--font-display);
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--gold);
-  margin-bottom: 4px;
-}
-
-.flashcard-promo-text span {
-  font-size: 13px;
-  color: #bba880;
-}
-
-.btn-flashcard {
-  background: var(--amber);
-  color: var(--ink);
-  text-decoration: none;
-  padding: 11px 26px;
-  border-radius: 999px;
-  font-family: var(--font-body);
-  font-weight: 700;
-  font-size: 14px;
-  letter-spacing: .04em;
-  transition: background .12s, transform .08s;
-  flex-shrink: 0;
-  display: inline-block;
-}
-
-.btn-flashcard:hover {
-  background: var(--amber-lt);
-  transform: translateY(-1px);
-}
-
-/* Bio card */
-.bio-row {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 32px;
-  align-items: start;
-}
-
-.bio-text {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: clamp(15px, 1.8vw, 18px);
-  line-height: 1.85;
-  color: #5a4530;
-}
-
-.bio-text strong {
-  font-style: normal;
-  font-size: clamp(18px, 2.5vw, 26px);
-  color: var(--ink);
-  display: block;
-  margin-bottom: 6px;
-  letter-spacing: -.01em;
-}
-
-.typo-note {
-  font-size: 12px;
-  color: #bba880;
-  font-style: normal;
-  font-family: var(--font-body);
-}
-
-/* Social links */
-.social-links {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.soc-btn {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  text-decoration: none;
-  padding: 10px 18px;
-  border-radius: 12px;
-  font-size: 13px;
-  font-family: var(--font-body);
-  font-weight: 700;
-  letter-spacing: .03em;
-  transition: transform .08s, box-shadow .12s;
-  white-space: nowrap;
-  min-width: 150px;
-}
-
-.soc-btn:hover { transform: translateX(3px); }
-
-.soc-btn svg {
-  width: 16px;
-  height: 16px;
-  flex-shrink: 0;
-}
-
-.soc-facebook  { background: #1877f2; color: white; }
-.soc-instagram { background: linear-gradient(45deg,#f58529,#dd2a7b,#8134af); color: white; }
-.soc-whatsapp  { background: #25d366; color: #0a3020; }
-.soc-email     { background: var(--parchment); color: var(--sienna); border: 1px solid rgba(200,134,26,.3); }
-
-/* ── Divider ────────────────────────────────────────────────── */
-.divider {
-  text-align: center;
-  color: var(--amber);
-  font-size: 16px;
-  letter-spacing: .4em;
-  opacity: .5;
-  margin: 32px 0;
-}
-
-/* ── Animations ─────────────────────────────────────────────── */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(18px); }
-  to   { opacity: 1; transform: translateY(0);    }
-}
-
-/* ── Responsive ─────────────────────────────────────────────── */
-@media (max-width: 820px) {
-  .workspace { grid-template-columns: 1fr; }
-  .info-card { order: -1; }
-  .bio-row   { grid-template-columns: 1fr; }
-  .social-links { flex-direction: row; flex-wrap: wrap; }
-}
-
-@media (max-width: 520px) {
-  .masthead h1 { font-size: 38px; }
-  .container   { padding: 28px 16px 60px; }
-  .toolbar     { gap: 6px; }
-  .btn         { padding: 8px 14px; font-size: 12px; }
-}
-</style>
+  <meta charset="UTF-8" />
+  <title>Nikud with Moti Vation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#6366f1" />
+
+  <!-- Hebrew font with full Nikud support -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;700&display=swap"
+        rel="stylesheet" />
+
+  <style>
+    /* ─── Reset ─────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ─── Body ──────────────────────────────────────── */
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(145deg, #f0f4ff 0%, #e8f5e9 100%);
+      min-height: 100vh;
+      color: #111827;
+    }
+
+    /* ─── Page wrapper ──────────────────────────────── */
+    .page {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 44px 20px 88px;
+    }
+
+    /* ─── Two-column grid ───────────────────────────── */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 5fr 7fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    /* ─── Card shell ────────────────────────────────── */
+    .card {
+      background: #fff;
+      border-radius: 22px;
+      padding: 30px;
+      box-shadow: 0 6px 32px rgba(99, 102, 241, .10);
+    }
+
+    /* ─── Site title ────────────────────────────────── */
+    .site-title {
+      font-size: 30px;
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 28px;
+      /* Gradient text — colour fallback for older engines */
+      color: #6366f1;
+      background: linear-gradient(130deg, #6366f1 30%, #22c55e);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ─── Numbered steps ────────────────────────────── */
+    .steps {
+      list-style: none;
+      counter-reset: step;
+    }
+    .steps li {
+      counter-increment: step;
+      display: flex;
+      gap: 12px;
+      padding: 11px 0;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 14px;
+      line-height: 1.65;
+      color: #374151;
+      align-items: flex-start;
+    }
+    .steps li:last-child { border-bottom: none; }
+    .steps li::before {
+      content: counter(step);
+      flex-shrink: 0;
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6366f1, #818cf8);
+      color: #fff;
+      font-size: 12px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ─── Rule panel ────────────────────────────────── */
+    .rules-panel {
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid #f1f5f9;
+    }
+    .rules-panel h4 {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.4px;
+      color: #9ca3af;
+      margin-bottom: 14px;
+    }
+    .rule {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 5px 0;
+      font-size: 13.5px;
+      color: #4b5563;
+    }
+    /* Hebrew display spans */
+    .heb {
+      font-family: 'Frank Ruhl Libre', 'Noto Serif Hebrew', Georgia, serif;
+      font-size: 20px;
+      direction: rtl;
+      unicode-bidi: embed;
+      line-height: 1.75;
+    }
+    .arr { color: #6366f1; font-weight: 700; }
+    .rm  { color: #ef4444; font-weight: 700; font-size: 15px; }
+
+    /* ─── Toolbar ────────────────────────────────────── */
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .btn {
+      border: none;
+      border-radius: 99px;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: .2px;
+      transition: opacity .15s, transform .08s, box-shadow .15s;
+    }
+    .btn:hover  { opacity: .84; box-shadow: 0 4px 14px rgba(0,0,0,.16); }
+    .btn:active { transform: scale(.96); }
+    .btn-dicta { background: #6366f1; color: #fff; }
+    .btn-paste { background: #92400e; color: #fff; }
+    .btn-copy  { background: #16a34a; color: #fff; }
+    .btn-clear { background: #dc2626; color: #fff; }
+
+    /* ─── Hebrew textarea ───────────────────────────── */
+    #text-area {
+      display: block;
+      width: 100%;
+      min-height: 340px;
+      border: 2px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 18px;
+      resize: vertical;
+      outline: none;
+      font-family: 'Frank Ruhl Libre', 'Noto Serif Hebrew', Georgia, serif;
+      font-size: 24px;
+      /* Extra line-height needed for diacritics extending above/below baseline */
+      line-height: 2.15;
+      direction: rtl;
+      text-align: right;
+      color: #1f2937;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    #text-area:focus {
+      border-color: #6366f1;
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, .15);
+    }
+    #text-area::placeholder { color: #9ca3af; font-size: 15px; }
+
+    /* ─── Status bar ────────────────────────────────── */
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+      font-size: 12px;
+      color: #9ca3af;
+      min-height: 18px;
+    }
+    #status-msg {
+      font-weight: 600;
+      color: #6366f1;
+      transition: opacity .35s;
+    }
+
+    /* ─── Flashcards banner ─────────────────────────── */
+    .banner {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-top: 32px;
+      padding: 22px 28px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #6366f1, #22c55e);
+      color: #fff;
+    }
+    .banner strong { font-size: 16px; flex: 1; min-width: 180px; }
+    .banner a {
+      background: #fff;
+      color: #111827;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 14px;
+      padding: 10px 22px;
+      border-radius: 99px;
+      white-space: nowrap;
+      transition: transform .1s;
+    }
+    .banner a:hover { transform: scale(1.04); }
+
+    /* ─── Contact row ───────────────────────────────── */
+    .contacts {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 28px;
+    }
+    .contacts a {
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 10px 22px;
+      border-radius: 99px;
+      color: #fff;
+      transition: opacity .15s, transform .1s;
+    }
+    .contacts a:hover { opacity: .84; transform: translateY(-1px); }
+    .c-fb { background: #1877f2; }
+    .c-ig { background: linear-gradient(45deg, #f58529, #dd2a7b, #8134af); }
+    .c-wa { background: #25d366; }
+    .c-em { background: #6b7280; }
+
+    /* ─── Marketing section ─────────────────────────── */
+    .marketing {
+      margin-top: 28px;
+      text-align: center;
+      font-size: 15px;
+      line-height: 2;
+      color: #4b5563;
+    }
+    .marketing .brand {
+      display: block;
+      font-size: 22px;
+      font-weight: 800;
+      color: #111827;
+      margin-bottom: 4px;
+    }
+
+    /* ─── Responsive ────────────────────────────────── */
+    @media (max-width: 860px) {
+      .main-grid { grid-template-columns: 1fr; }
+      #text-area  { min-height: 260px; }
+    }
+    @media (max-width: 480px) {
+      .page       { padding: 20px 14px 60px; }
+      .card       { padding: 22px; }
+      .site-title { font-size: 24px; }
+      #text-area  { font-size: 20px; }
+    }
+  </style>
 </head>
 
 <body>
+<div class="page">
 
-<div class="page-rule"></div>
-<div class="flash-overlay" id="flashOverlay"></div>
+  <div class="main-grid">
 
-<div class="container">
+    <!-- ── Info card ─────────────────────────────── -->
+    <div class="card">
+      <h1 class="site-title">Nikud<br>with Moti Vation</h1>
 
-  <!-- ── Masthead ───────────────────────────────────────── -->
-  <header class="masthead">
-    <p class="masthead-hebrew">נִקּוּד עִם מוֹטִי וֵיְשֵׁן</p>
-    <h1>Nikud with <em>Moti Vation</em></h1>
-    <p class="masthead-sub">Simplified Hebrew vocalization for learners</p>
-    <span class="ornament">✦ ✦ ✦</span>
-  </header>
+      <ol class="steps">
+        <li>
+          If your text has no Nikud, vocalize it automatically with
+          <strong>DICTA</strong> first.
+        </li>
+        <li>
+          Paste the fully vocalized Hebrew into the box on the right.
+        </li>
+        <li>
+          Nikud is simplified instantly — enjoy much clearer reading!
+        </li>
+      </ol>
 
-  <!-- ── Workspace ─────────────────────────────────────── -->
-  <div class="workspace">
+      <div class="rules-panel">
+        <h4>What the filter does</h4>
 
-    <!-- Info card -->
-    <div class="card info-card">
-      <div class="card-body" style="padding:24px;">
-
-        <p class="card-title">How it works</p>
-
-        <ol class="steps">
-          <li>
-            <span class="step-num">1</span>
-            <span class="step-text">
-              <strong>No Nikud yet?</strong>
-              <span>Open DICTA and vocalize your Hebrew text there first.</span>
-            </span>
-          </li>
-          <li>
-            <span class="step-num">2</span>
-            <span class="step-text">
-              <strong>Paste</strong>
-              <span>Use the Paste button or Ctrl+V to drop the vocalized text in.</span>
-            </span>
-          </li>
-          <li>
-            <span class="step-num">3</span>
-            <span class="step-text">
-              <strong>Read</strong>
-              <span>The tool instantly strips complex marks — only clear, learner-friendly vowels remain.</span>
-            </span>
-          </li>
-          <li>
-            <span class="step-num">4</span>
-            <span class="step-text">
-              <strong>Copy</strong>
-              <span>Hit Copy and paste the result anywhere.</span>
-            </span>
-          </li>
-        </ol>
-
-        <div class="vowel-table">
-          <h5>Simplified Vowels</h5>
-          <div class="vowel-rows">
-            <div class="vowel-row">
-              <span class="vowel-from">בָ</span>
-              <span class="vowel-arrow">→</span>
-              <span class="vowel-to">בָ</span>
-              <span class="vowel-label">Qamats stays</span>
-            </div>
-            <div class="vowel-row">
-              <span class="vowel-from">בֶ</span>
-              <span class="vowel-arrow">→</span>
-              <span class="vowel-to">בֶ</span>
-              <span class="vowel-label">Segol stays</span>
-            </div>
-            <div class="vowel-row">
-              <span class="vowel-from">בוּ</span>
-              <span class="vowel-arrow">→</span>
-              <span class="vowel-to">בו</span>
-              <span class="vowel-label">Qubuts / Shuruk → Vav</span>
-            </div>
-            <div class="vowel-row">
-              <span class="vowel-from">בֵ</span>
-              <span class="vowel-arrow">→</span>
-              <span class="vowel-to">בֶ</span>
-              <span class="vowel-label">Tsere → Segol</span>
-            </div>
-            <div class="vowel-row">
-              <span class="vowel-from">בַ</span>
-              <span class="vowel-arrow">→</span>
-              <span class="vowel-to">בָ</span>
-              <span class="vowel-label">Patah → Qamats</span>
-            </div>
-            <div class="vowel-row">
-              <span class="vowel-from">בְ / בֹ</span>
-              <span class="vowel-arrow">→</span>
-              <span class="vowel-to">ב</span>
-              <span class="vowel-label">Sheva / Holam removed</span>
-            </div>
-          </div>
+        <!-- Tsere → Segol: using alef as neutral base character -->
+        <div class="rule">
+          <span class="heb">אֵ</span>
+          <span class="arr">→</span>
+          <span class="heb">אֶ</span>
+          <span>Tsere → Segol</span>
         </div>
 
+        <!-- Patah / Hataf-Patah / Hataf-Qamats → Qamats -->
+        <div class="rule">
+          <span class="heb">אַ</span>
+          <span class="arr">→</span>
+          <span class="heb">אָ</span>
+          <span>Patah / Ḥataf → Qamats</span>
+        </div>
+
+        <!-- Qubuts → insert Vav -->
+        <div class="rule">
+          <span class="heb">אֻ</span>
+          <span class="arr">→</span>
+          <span class="heb">או</span>
+          <span>Qubuts → Vav letter</span>
+        </div>
+
+        <!-- Dagesh rule: keep only in Bet Kaf Pe -->
+        <div class="rule">
+          <span class="heb">דּ</span>
+          <span class="arr">→</span>
+          <span class="heb">ד</span>
+          <span>Dagesh kept only in&nbsp;<span class="heb" style="font-size:17px">ב&thinsp;כ&thinsp;פ</span></span>
+        </div>
+
+        <!-- Removed marks -->
+        <div class="rule">
+          <span class="rm">✕</span>
+          <span>Holam, Sheva, Shin‑right‑dot, Meteg removed</span>
+        </div>
       </div>
     </div>
 
-    <!-- Editor card -->
-    <div class="card editor-card">
-
+    <!-- ── Tool card ──────────────────────────────── -->
+    <div class="card">
       <div class="toolbar">
-        <button class="btn btn-dicta" onclick="openDicta()" title="Open DICTA vowelizer">
-          ✦ DICTA
-        </button>
-        <button class="btn btn-paste" onclick="pasteText()" title="Paste from clipboard">
-          ⬇ Paste
-        </button>
-        <button class="btn btn-copy" onclick="copyText()" title="Copy result">
-          ⬆ Copy
-        </button>
-        <button class="btn btn-clear" onclick="clearText()" title="Clear editor">
-          ✕ Clear
-        </button>
+        <button class="btn btn-dicta" onclick="openDicta()">🔗 DICTA</button>
+        <button class="btn btn-paste" onclick="pasteText()">📋 Paste</button>
+        <button class="btn btn-copy"  id="copy-btn" onclick="copyText()">Copy</button>
+        <button class="btn btn-clear" onclick="clearText()">✕ Clear</button>
       </div>
 
-      <div class="editor-area">
-        <textarea
-          id="editor"
-          placeholder="...הדביקו כאן טקסט מנוקד"
-          spellcheck="false"
-          autocorrect="off"
-          autocomplete="off"
-        ></textarea>
-        <div class="status-bar">
-          <span class="status-msg" id="statusMsg"></span>
-          <span id="charCount"></span>
-        </div>
-      </div>
+      <textarea
+        id="text-area"
+        placeholder="הדבק כאן טקסט מנוקד…"
+        spellcheck="false"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+      ></textarea>
 
-    </div>
-  </div><!-- /workspace -->
-
-  <div class="divider">· · ·</div>
-
-  <!-- ── Footer ─────────────────────────────────────────── -->
-  <section class="footer-section">
-
-    <!-- Flashcard promo -->
-    <div class="flashcard-promo">
-      <div class="flashcard-promo-text">
-        <strong>🎮 Interactive Flashcards Game</strong>
-        <span>I built it myself — and it's completely free</span>
-      </div>
-      <a class="btn-flashcard" href="https://motimorphoza.github.io/FlashCards-with-MotiVation/" target="_blank" rel="noopener">
-        Open Flashcards →
-      </a>
-    </div>
-
-    <!-- Bio + social -->
-    <div class="bio-row">
-      <div class="bio-text">
-        <strong>Hebrew with Moti Vation</strong>
-        I'm here — No Fear<br>
-        Hebrew will become so clear<br>
-        Online sessions from the comfort of your home<br>
-        Beginners · Advanced · Individuals · Groups<br>
-        <span class="typo-note">Fun &amp; interesting lessons — I love languages and I love teaching</span>
-      </div>
-
-      <div class="social-links">
-        <a class="soc-btn soc-facebook" href="https://www.facebook.com/share/1D6uJLL5nK/" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
-          Facebook
-        </a>
-        <a class="soc-btn soc-instagram" href="https://www.instagram.com/hebrew_with_motivation" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
-          Instagram
-        </a>
-        <a class="soc-btn soc-whatsapp" href="https://wa.me/48604726360" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-          WhatsApp
-        </a>
-        <a class="soc-btn soc-email" href="mailto:Mottex@gmail.com">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg>
-          Email
-        </a>
+      <div class="status-bar">
+        <span id="status-msg"></span>
+        <span id="char-count"></span>
       </div>
     </div>
 
-  </section>
+  </div><!-- /.main-grid -->
 
-</div><!-- /container -->
+  <!-- ── Flashcards banner ────────────────────── -->
+  <div class="banner">
+    <strong>🎮 Learn Hebrew with interactive Flashcards — Free!</strong>
+    <a href="https://motimorphoza.github.io/FlashCards-with-MotiVation/"
+       target="_blank" rel="noopener noreferrer">Open Flashcards →</a>
+  </div>
 
-<!-- ═══════════════════════════════════════════════════════════
-     NIKUD SIMPLIFIER — clean modular architecture
-     ═══════════════════════════════════════════════════════════ -->
+  <!-- ── Contact links ────────────────────────── -->
+  <div class="contacts">
+    <a class="c-fb" href="https://www.facebook.com/share/1D6uJLL5nK/"
+       target="_blank" rel="noopener">Facebook</a>
+    <a class="c-ig" href="https://www.instagram.com/hebrew_with_motivation"
+       target="_blank" rel="noopener">Instagram</a>
+    <a class="c-wa" href="https://wa.me/48604726360"
+       target="_blank" rel="noopener">WhatsApp</a>
+    <a class="c-em" href="mailto:Mottex@gmail.com">Email</a>
+  </div>
+
+  <!-- ── Marketing copy ───────────────────────── -->
+  <div class="marketing">
+    <span class="brand">Hebrew with Moti Vation</span>
+    I'm here — No Fear · Hebrew will become so clear<br>
+    Online sessions from the comfort of your home<br>
+    Beginners / Advanced · Individuals / Groups<br>
+    Fun &amp; Interesting lessons · I love languages and I love teaching<br>
+    Let's go on an adventure… Take care — Take air
+  </div>
+
+</div><!-- /.page -->
+
 <script>
-"use strict";
+/**
+ * ╔══════════════════════════════════════════════════════════════╗
+ * ║  NikudProcessor  —  Hebrew Nikud Simplification Engine      ║
+ * ╠══════════════════════════════════════════════════════════════╣
+ * ║  Pipeline:  processText(raw)                                 ║
+ * ║    1. normalize('NFD')     decompose combining marks         ║
+ * ║    2. parseGraphemes()     group { base, marks[] } clusters  ║
+ * ║    3. transformCluster()   per-cluster rule application:     ║
+ * ║         ├ drop te'amim     cantillation marks (U+0591–05AF)  ║
+ * ║         ├ removeMarks      SHEVA / HOLAM / SHIN‑R / METEG…  ║
+ * ║         ├ normalizeVowels  TSERE→SEGOL, PATAH→QAMATS, etc.  ║
+ * ║         ├ applyDagesh      keep only in ב כ פ               ║
+ * ║         └ insertVav        QUBUTS → append ו after base     ║
+ * ║    4. join + normalize('NFC')  canonical composed output     ║
+ * ╚══════════════════════════════════════════════════════════════╝
+ */
+const NikudProcessor = (() => {
 
-/* ── Unicode constants ───────────────────────────────────────── */
-const U = {
-  SHEVA:         "\u05B0",
-  HATAF_SEGOL:   "\u05B1",
-  HATAF_PATAH:   "\u05B2",
-  HATAF_QAMATS:  "\u05B3",
-  HIRIQ:         "\u05B4",
-  TSERE:         "\u05B5",
-  SEGOL:         "\u05B6",
-  PATAH:         "\u05B7",
-  QAMATS:        "\u05B8",
-  HOLAM:         "\u05B9",
-  HOLAM_HASER:   "\u05BA",
-  QUBUTS:        "\u05BB",
-  DAGESH:        "\u05BC",
-  METEG:         "\u05BD",
-  MAQAF:         "\u05BE",
-  RAFE:          "\u05BF",
-  SHIN_DOT:      "\u05C1",   // shin right dot
-  SIN_DOT:       "\u05C2",   // sin  left  dot
-  VAV:           "\u05D5",
-};
+  /* ── Unicode constants ───────────────────────────── */
 
-/* ── Letters that keep their dagesh ─────────────────────────── */
-const DAGESH_LETTERS = new Set(["ב", "כ", "פ"]);
+  /** All Hebrew Nikud (point) marks */
+  const M = Object.freeze({
+    SHEVA:         '\u05B0',
+    HATAF_SEGOL:   '\u05B1',
+    HATAF_PATAH:   '\u05B2',
+    HATAF_QAMATS:  '\u05B3',
+    HIRIQ:         '\u05B4',
+    TSERE:         '\u05B5',
+    SEGOL:         '\u05B6',
+    PATAH:         '\u05B7',
+    QAMATS:        '\u05B8',
+    HOLAM:         '\u05B9',
+    HOLAM_HASER:   '\u05BA',   // Holam variant used on Vav
+    QUBUTS:        '\u05BB',
+    DAGESH:        '\u05BC',
+    METEG:         '\u05BD',
+    RAFE:          '\u05BF',
+    SHIN_DOT_R:    '\u05C1',
+    SHIN_DOT_L:    '\u05C2',
+    QAMATS_QATAN:  '\u05C7',   // looks like Qamats; treat identically
+  });
 
-/* ── Step 1: strip marks that are always removed ─────────────── */
-function removeMarks(text) {
-  const STRIP = new Set([
-    U.SHEVA, U.HATAF_SEGOL,
-    U.HOLAM, U.HOLAM_HASER,
-    U.SHIN_DOT, U.SIN_DOT,
-    U.METEG, U.RAFE,
+  /** Hebrew base letters relevant to rules */
+  const L = Object.freeze({
+    VAV: '\u05D5',   // ו
+    BET: '\u05D1',   // ב
+    KAF: '\u05DB',   // כ
+    PE:  '\u05E4',   // פ
+  });
+
+  /* ── Rule tables (O(1) lookups) ──────────────────── */
+
+  /**
+   * Marks discarded with no replacement.
+   * Cantillation marks (U+0591–U+05AF) are handled separately via range check.
+   */
+  const REMOVE = new Set([
+    M.SHEVA,
+    M.HATAF_SEGOL,
+    M.HOLAM,
+    M.HOLAM_HASER,
+    M.METEG,
+    M.RAFE,
+    M.SHIN_DOT_R,
   ]);
-  return [...text].filter(ch => !STRIP.has(ch)).join("");
-}
 
-/* ── Step 2: normalize vowels & handle dagesh ────────────────── */
-function normalizeVowels(text) {
-  const chars  = [...text];
-  const result = [];
+  /** Direct vowel substitutions */
+  const CONVERT = new Map([
+    [M.TSERE,        M.SEGOL ],   // Tsere        → Segol
+    [M.PATAH,        M.QAMATS],   // Patah        → Qamats
+    [M.HATAF_PATAH,  M.QAMATS],   // Ḥataf-Patah  → Qamats
+    [M.HATAF_QAMATS, M.QAMATS],   // Ḥataf-Qamats → Qamats
+    [M.QAMATS_QATAN, M.QAMATS],   // Qamats Qatan → Qamats (normalise)
+  ]);
 
-  for (let i = 0; i < chars.length; i++) {
-    const ch   = chars[i];
-    const prev = result[result.length - 1] ?? "";
+  /**
+   * Simplified Begedkefet: Dagesh is retained only in these letters.
+   * All other letters lose their Dagesh.
+   */
+  const DAGESH_LETTERS = new Set([L.BET, L.KAF, L.PE]);
 
-    // PATAH → QAMATS
-    if (ch === U.PATAH) { result.push(U.QAMATS); continue; }
+  /* ── Helper ──────────────────────────────────────── */
 
-    // HATAF_PATAH / HATAF_QAMATS → QAMATS
-    if (ch === U.HATAF_PATAH || ch === U.HATAF_QAMATS) { result.push(U.QAMATS); continue; }
+  /**
+   * U+0591–U+05C7 covers the full Hebrew combining-marks block:
+   * cantillation marks (te'amim) U+0591–U+05AF and Nikud U+05B0–U+05C7.
+   *
+   * @param {number} cp — code point
+   * @returns {boolean}
+   */
+  const isHebrewMark = cp => cp >= 0x0591 && cp <= 0x05C7;
 
-    // TSERE → SEGOL
-    if (ch === U.TSERE) { result.push(U.SEGOL); continue; }
+  /* ── Step 1: Parse ───────────────────────────────── */
 
-    // QUBUTS → insert ו only if not already there
-    if (ch === U.QUBUTS) {
-  result.push(U.VAV, U.DAGESH);
-  continue;
-}
+  /**
+   * Split an NFD string into grapheme clusters.
+   * Each cluster: { base: string, marks: string[] }
+   *
+   * "Base" is any non-combining code point (Hebrew letter, space,
+   * Latin character, punctuation, etc.).
+   * "Marks" are the Hebrew combining characters that immediately follow it.
+   *
+   * @param  {string} nfd — NFD-normalized input
+   * @returns {{ base: string, marks: string[] }[]}
+   */
+  function parseGraphemes(nfd) {
+    const clusters = [];
+    let i = 0;
 
-    // DAGESH — keep only for ב כ פ
-    if (ch === U.DAGESH) {
-      if (DAGESH_LETTERS.has(prev)) result.push(U.DAGESH);
-      continue;
+    while (i < nfd.length) {
+      const cp   = nfd.codePointAt(i);
+      const base = String.fromCodePoint(cp);
+      i += base.length;           // advance 1 or 2 code units (surrogate-safe)
+
+      const marks = [];
+      while (i < nfd.length && isHebrewMark(nfd.codePointAt(i))) {
+        marks.push(nfd[i++]);     // each Hebrew mark is a single BMP code unit
+      }
+
+      clusters.push({ base, marks });
     }
 
-    result.push(ch);
+    return clusters;
   }
 
-  return result.join("");
-}
+  /* ── Step 2: Transform ───────────────────────────── */
 
-/* ── Step 3: fix known common sequences ──────────────────────── */
-function fixSequences(text) {
-  return text
-    .replace(/לוֹא/g, "לֹא")
-    .replace(/פּ?וֹה/g, "פֹּה")
-    .replace(/זוֹאת/g, "זֹאת")
-    .replace(/רוֹאש/g, "רֹאש");
-}
+  /**
+   * Apply all simplification rules to the combining marks of one cluster.
+   *
+   * @param  {string}   base  — the base letter (needed for Dagesh decision)
+   * @param  {string[]} marks — combining marks from NFD decomposition
+   * @returns {{ cleanMarks: string[], insertVav: boolean }}
+   *   insertVav signals that a VAV letter must be appended after the cluster.
+   */
+  function transformMarks(base, marks) {
+    const cleanMarks = [];
+    let insertVav = false;
 
-/* ── Pipeline ────────────────────────────────────────────────── */
-function processText(input) {
-  const s1 = removeMarks(input);
-  const s2 = normalizeVowels(s1);
-  const s3 = fixSequences(s2);
-  return s3.normalize("NFC");
-}
+    for (const mark of marks) {
+      const cp = mark.codePointAt(0);
 
-/* ── UI helpers ──────────────────────────────────────────────── */
-const editor     = document.getElementById("editor");
-const statusMsg  = document.getElementById("statusMsg");
-const charCount  = document.getElementById("charCount");
-const flashOl    = document.getElementById("flashOverlay");
+      // 1. Cantillation / te'amim — always discard
+      if (cp >= 0x0591 && cp <= 0x05AF) continue;
 
-let statusTimer;
+      // 2. Marks removed with no replacement
+      if (REMOVE.has(mark)) continue;
 
-function showStatus(msg, color = "var(--teal)") {
-  statusMsg.textContent  = msg;
-  statusMsg.style.color  = color;
-  statusMsg.classList.add("show");
-  clearTimeout(statusTimer);
-  statusTimer = setTimeout(() => statusMsg.classList.remove("show"), 2200);
-}
+      // 3. Qubuts: strip the dot, flag a VAV to follow
+      if (mark === M.QUBUTS) { insertVav = true; continue; }
+
+      // 4. Dagesh: retain only in Bet, Kaf, Pe
+      if (mark === M.DAGESH) {
+        if (DAGESH_LETTERS.has(base)) cleanMarks.push(mark);
+        continue;
+      }
+
+      // 5. Vowel conversion
+      if (CONVERT.has(mark)) { cleanMarks.push(CONVERT.get(mark)); continue; }
+
+      // 6. Pass through: Hiriq, Segol, Qamats, Shin-left-dot, …
+      cleanMarks.push(mark);
+    }
+
+    return { cleanMarks, insertVav };
+  }
+
+  /**
+   * Produce the output string for one grapheme cluster.
+   *
+   * @param  {{ base: string, marks: string[] }} cluster
+   * @returns {string}
+   */
+  function transformCluster({ base, marks }) {
+    if (marks.length === 0) return base;   // fast path for plain characters
+
+    const { cleanMarks, insertVav } = transformMarks(base, marks);
+    let out = base + cleanMarks.join('');
+
+    // Append a plain VAV for Qubuts — never duplicate an existing VAV base.
+    if (insertVav && base !== L.VAV) out += L.VAV;
+
+    return out;
+  }
+
+  /* ── Public API ──────────────────────────────────── */
+
+  /**
+   * Simplify Hebrew Nikud in a string of any length.
+   * The function is idempotent: calling it twice gives the same result.
+   *
+   * @param  {string} text
+   * @returns {string}
+   */
+  function processText(text) {
+    if (!text) return '';
+    return parseGraphemes(text.normalize('NFD'))
+      .map(transformCluster)
+      .join('')
+      .normalize('NFC');         // canonical composed form for correct display
+  }
+
+  return { processText };
+
+})();
+
+
+/* ════════════════════════════════════════════════════════════
+ *  UI
+ * ════════════════════════════════════════════════════════════ */
+
+const textEl   = document.getElementById('text-area');
+const statusEl = document.getElementById('status-msg');
+const countEl  = document.getElementById('char-count');
+const copyBtn  = document.getElementById('copy-btn');
+
+/* ── Utilities ───────────────────────────────────────────── */
 
 function updateCount() {
-  const n = [...editor.value].filter(c => /[\u05D0-\u05EA]/.test(c)).length;
-  charCount.textContent = n ? `${n} Hebrew chars` : "";
+  const n = textEl.value.length;
+  countEl.textContent = n > 0 ? `${n.toLocaleString()} chars` : '';
 }
 
-function flashPage() {
-  flashOl.classList.add("flash");
-  setTimeout(() => flashOl.classList.remove("flash"), 180);
+let _statusTimer;
+function showStatus(msg, ms = 2400) {
+  statusEl.textContent  = msg;
+  statusEl.style.opacity = '1';
+  clearTimeout(_statusTimer);
+  _statusTimer = setTimeout(() => { statusEl.style.opacity = '0'; }, ms);
 }
 
-/* ── Transform on input ──────────────────────────────────────── */
-editor.addEventListener("input", () => {
-  editor.value = processText(editor.value);
+/* ── In-place transform with cursor preservation ─────────── */
+
+/**
+ * Transform the textarea value while keeping the caret at the right place.
+ *
+ * Strategy: process only the text-before-cursor; the length of the
+ * processed prefix is the correct new caret offset.
+ * This is fully accurate for mark removal / conversion and approximately
+ * accurate for the Qubuts→VAV insertion case (off at most by 1 position).
+ */
+function transformInPlace() {
+  const original = textEl.value;
+  const start    = textEl.selectionStart;
+
+  const processed = NikudProcessor.processText(original);
+  if (processed === original) { updateCount(); return; }
+
+  const newPos = NikudProcessor.processText(original.slice(0, start)).length;
+  textEl.value = processed;
+  try { textEl.setSelectionRange(newPos, newPos); } catch (_) {}
   updateCount();
-});
+}
 
-/* ── Button actions ──────────────────────────────────────────── */
+/* ── Textarea listener ───────────────────────────────────── */
+
+// The 'input' event covers: typed characters, Ctrl+V paste,
+// drag-drop, cut — in short, every content mutation by the user.
+textEl.addEventListener('input', transformInPlace);
+
+/* ── Button handlers ─────────────────────────────────────── */
+
 function openDicta() {
-  window.open("https://nakdan.dicta.org.il/", "_blank", "noopener");
+  window.open('https://nakdan.dicta.org.il/', '_blank', 'noopener,noreferrer');
 }
 
 async function pasteText() {
   try {
-    const raw      = await navigator.clipboard.readText();
-    editor.value   = processText(raw);
+    const raw = await navigator.clipboard.readText();
+    // Setting .value programmatically does NOT fire 'input', so we
+    // call processText manually then update the UI ourselves.
+    textEl.value = NikudProcessor.processText(raw);
+    textEl.focus();
     updateCount();
-    flashPage();
-    showStatus("✓ Pasted & simplified");
+    showStatus('✓ Pasted & simplified');
   } catch {
-    showStatus("Use Ctrl+V to paste", "var(--sienna)");
-    editor.focus();
+    showStatus('⚠ Clipboard access denied — use Ctrl+V / Cmd+V instead');
   }
 }
 
-async function copyText() {
-  if (!editor.value.trim()) { showStatus("Nothing to copy", "var(--sienna)"); return; }
-  try {
-    await navigator.clipboard.writeText(editor.value);
-    showStatus("✓ Copied to clipboard");
-  } catch {
-    showStatus("Copy failed", "var(--sienna)");
-  }
+function copyText() {
+  const val = textEl.value;
+  if (!val.trim()) return;
+  navigator.clipboard.writeText(val)
+    .then(() => {
+      const orig = copyBtn.textContent;
+      copyBtn.textContent = '✓ Copied!';
+      setTimeout(() => { copyBtn.textContent = orig; }, 1800);
+    })
+    .catch(() => showStatus('⚠ Copy failed — try selecting and using Ctrl+C'));
 }
 
 function clearText() {
-  editor.value = "";
-  editor.focus();
-  updateCount();
-  showStatus("Cleared");
+  textEl.value           = '';
+  countEl.textContent    = '';
+  statusEl.textContent   = '';
+  textEl.focus();
+}
+
+/* ── PWA — kept, errors silenced ────────────────────────── */
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
 }
 </script>
-
 </body>
 </html>
-
