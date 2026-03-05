@@ -742,7 +742,7 @@ function removeMarks(text) {
     U.SHEVA, U.HATAF_SEGOL,
     U.HOLAM, U.HOLAM_HASER,
     U.SHIN_DOT, U.SIN_DOT,
-    U.METEG, U.RAFE, U.HIRIQ,
+    U.METEG, U.RAFE,
   ]);
   return [...text].filter(ch => !STRIP.has(ch)).join("");
 }
@@ -767,9 +767,9 @@ function normalizeVowels(text) {
 
     // QUBUTS → insert ו only if not already there
     if (ch === U.QUBUTS) {
-      if (prev !== U.VAV) result.push(U.VAV);
-      continue;
-    }
+  result.push(U.VAV, U.DAGESH);
+  continue;
+}
 
     // DAGESH — keep only for ב כ פ
     if (ch === U.DAGESH) {
@@ -870,3 +870,4 @@ function clearText() {
 
 </body>
 </html>
+
