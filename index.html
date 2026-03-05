@@ -766,7 +766,7 @@ const NikudProcessor = (() => {
    * Dagesh is retained ONLY in these letters.
    * Every other letter loses its Dagesh (including ג ד ת etc.).
    */
-  const DAGESH_KEEP = new Set([L.BET, L.KAF, L.PE]);
+const DAGESH_KEEP = new Set([L.BET, L.KAF, L.PE, L.VAV]);
 
   /**
    * Marks that are silently discarded with NO substitution.
