@@ -527,7 +527,7 @@ textarea::placeholder {
           </li>
         </ol>
 
-       </div>
+      </div>
     </div>
 
     <!-- Editor card -->
@@ -605,7 +605,7 @@ textarea::placeholder {
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
           WhatsApp
         </a>
-        <a class="soc-btn soc-email" href="mailto:Mottex@gmail.com">
+        <a class="soc-btn soc-email" href="/cdn-cgi/l/email-protection#d29fbda6a6b7aa92b5bfb3bbbefcb1bdbf">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg>
           Email
         </a>
@@ -616,7 +616,7 @@ textarea::placeholder {
 
 </div><!-- /container -->
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 /**
  * ╔═══════════════════════════════════════════════════════════════════╗
  * ║  NikudProcessor  —  Hebrew Nikud Simplification Engine  v3       ║
@@ -672,7 +672,7 @@ const NikudProcessor = (() => {
    * Dagesh is retained ONLY in these letters.
    * Every other letter loses its Dagesh (including ג ד ת etc.).
    */
-const DAGESH_KEEP = new Set([L.BET, L.KAF, L.PE, L.VAV]);
+  const DAGESH_KEEP = new Set([L.BET, L.KAF, L.PE]);
 
   /**
    * Marks that are silently discarded with NO substitution.
@@ -697,6 +697,125 @@ const DAGESH_KEEP = new Set([L.BET, L.KAF, L.PE, L.VAV]);
     [M.HATAF_QAMATS, M.QAMATS],  // Ḥataf-Qamats → Qamats
     [M.QAMATS_QATAN, M.QAMATS],  // Qamats Qatan → Qamats  (canonical variant)
   ]);
+
+  /* ── Special-words exception system ────────────────────────────── */
+
+  /**
+   * Base words that must NOT trigger the Holam→Vav insertion rule.
+   * Stored as plain Hebrew letters with NO nikud — comparison is always
+   * done against a stripped, prefix-removed form of the input token.
+   */
+  const SPECIAL_BASE_WORDS = new Set([
+    "\u05E4\u05D4",              // פה
+    "\u05DC\u05D0",              // לא
+    "\u05E8\u05D0\u05E9",        // ראש
+    "\u05D6\u05D0\u05EA",        // זאת
+  ]);
+
+  /**
+   * Single Hebrew letters that may legally appear as proclitics
+   * (prefixes fused to the following word without a space).
+   *
+   * Valid prefixes:  ו  ש  כ  ל  ב  מ  ה
+   *
+   * Multi-letter combinations (כש, וש, וכש, etc.) are handled
+   * automatically because stripHebrewPrefixes works greedily: it peels
+   * one valid prefix letter at a time until no more prefix letters
+   * remain at the front.
+   */
+  const PREFIX_LETTERS = new Set([
+    "\u05D5",   // ו  (ve / u — "and")
+    "\u05E9",   // ש  (she — "that/which")
+    "\u05DB",   // כ  (ke  — "as/like/when")
+    "\u05DC",   // ל  (le  — "to/for")
+    "\u05D1",   // ב  (be  — "in/at")
+    "\u05DE",   // מ  (mi  — "from")
+    "\u05D4",   // ה  (ha  — "the")
+  ]);
+
+  /**
+   * Strip all Hebrew diacritics (nikud + cantillation) from a string
+   * that has already been NFD-normalized.
+   * Removes every code point in U+0591–U+05C7.
+   *
+   * @param  {string} nfdWord — NFD-normalized string
+   * @returns {string}        — base letters and non-Hebrew chars only
+   */
+  function stripNikud(nfdWord) {
+    let out = "";
+    for (const ch of nfdWord) {
+      const cp = ch.codePointAt(0);
+      if (cp < 0x0591 || cp > 0x05C7) out += ch;
+    }
+    return out;
+  }
+
+  /**
+   * Greedily remove any leading Hebrew prefix letters from `word`.
+   * `word` must already have nikud stripped (pure Hebrew letters only).
+   *
+   * Strategy: advance one character at a time as long as:
+   *   (a) the current character is a known prefix letter, AND
+   *   (b) at least `MIN_BASE_LEN` characters remain after removing it.
+   *
+   * This guarantees we never accidentally consume the base word itself.
+   * MIN_BASE_LEN is 2 because the shortest protected base word ("פה", "לא")
+   * is 2 letters long.
+   *
+   * Examples (nikud already stripped):
+   *   ופה    →  פה     prefix: ו
+   *   שלא    →  לא     prefix: ש
+   *   כשלא   →  לא     prefixes: כ ש   (two-letter combo, peeled one by one)
+   *   מהראש  →  ראש    prefixes: מ ה
+   *   וכשלא  →  לא     prefixes: ו כ ש  (three-letter combo)
+   *   לא     →  לא     (nothing to peel — word already at MIN_BASE_LEN)
+   *   ראש    →  ראש    (ר is not a prefix letter)
+   *
+   * @param  {string} word — nikud-stripped Hebrew letters
+   * @returns {string}
+   */
+  function stripHebrewPrefixes(word) {
+    const MIN_BASE_LEN = 2;
+    let i = 0;
+    // Stop stripping when fewer than MIN_BASE_LEN chars would remain
+    while (i < word.length - MIN_BASE_LEN && PREFIX_LETTERS.has(word[i])) {
+      i++;
+    }
+    return word.slice(i);
+  }
+
+  /**
+   * Decide whether a raw word token (as it appears in the source text,
+   * complete with nikud and possible non-Hebrew punctuation) is a
+   * protected special word.
+   *
+   * Process:
+   *   1. NFD-decompose so nikud are explicit combining chars.
+   *   2. Strip all nikud marks (U+0591–U+05C7).
+   *   3. Filter to Hebrew letters only — removes attached punctuation.
+   *   4. Strip Hebrew prefixes greedily.
+   *   5. Check against SPECIAL_BASE_WORDS.
+   *
+   * This function is O(k) where k = token length.
+   *
+   * @param  {string} rawToken
+   * @returns {boolean}
+   */
+  function isSpecialWord(rawToken) {
+    // Step 1–2: decompose and strip diacritics
+    const stripped = stripNikud(rawToken.normalize("NFD"));
+
+    // Step 3: keep Hebrew base letters only (U+05D0–U+05EA)
+    // This removes any punctuation or non-Hebrew chars attached to the token.
+    let hebrewOnly = "";
+    for (const ch of stripped) {
+      const cp = ch.codePointAt(0);
+      if (cp >= 0x05D0 && cp <= 0x05EA) hebrewOnly += ch;
+    }
+
+    // Step 4–5: strip prefixes and check
+    return SPECIAL_BASE_WORDS.has(stripHebrewPrefixes(hebrewOnly));
+  }
 
   /* ── Step 1: Parse grapheme clusters ───────────────────────────── */
 
@@ -784,9 +903,13 @@ const DAGESH_KEEP = new Set([L.BET, L.KAF, L.PE, L.VAV]);
    *     Example: סֻלָּם → סוּלָּם
    *
    * @param  {{ base: string, marks: string[] }} cluster
+   * @param  {boolean} suppressHolamVav — when true, the Holam→Vav insertion
+   *         rule (Case B) is disabled for this cluster.  The Holam dot is
+   *         still removed; only the Vav insertion is skipped.
+   *         All other rules remain active regardless of this flag.
    * @returns {string}
    */
-  function transformCluster({ base, marks }) {
+  function transformCluster({ base, marks }, suppressHolamVav = false) {
     // Fast-path: clusters with no marks need no processing
     if (marks.length === 0) return base;
 
@@ -834,12 +957,16 @@ const DAGESH_KEEP = new Set([L.BET, L.KAF, L.PE, L.VAV]);
 
     // ── Holam post-processing ────────────────────────────────────────
     if (hasHolam) {
-      if (base !== L.VAV) {
-        // Case B: insert a plain Vav to represent the /o/ sound
+      if (base === L.VAV) {
+        // Case A: Holam Vav (וֹ) — dot excluded from cleanMarks, letter stays.
+        // This applies unconditionally; there is nothing extra to insert.
+      } else if (!suppressHolamVav) {
+        // Case B (normal): insert a plain Vav to represent the /o/ sound.
         out += L.VAV;
       }
-      // Case A (base === VAV): dot already excluded from cleanMarks;
-      //   the Vav letter itself remains in `out` — nothing more to do.
+      // Case B (suppressed): the Holam dot is already gone (excluded from
+      // cleanMarks above), but no Vav is inserted.  This is the correct
+      // behaviour for protected words like פֹּה, לֹא, רֹאשׁ, זֹאת.
     }
 
     // ── Qubuts post-processing ───────────────────────────────────────
@@ -862,21 +989,61 @@ const DAGESH_KEEP = new Set([L.BET, L.KAF, L.PE, L.VAV]);
   /**
    * Simplify Hebrew Nikud in an arbitrary string.
    *
+   * The pipeline now works at two levels:
+   *
+   *   Token level  (this function)
+   *     • Split text into word tokens and whitespace runs.
+   *     • For each word token, decide whether it is a special word
+   *       (→ suppressHolamVav = true).
+   *
+   *   Cluster level  (transformCluster, called per token)
+   *     • Apply all Nikud rules.
+   *     • Honor the suppressHolamVav flag for the Holam Case B rule only.
+   *
+   * Splitting strategy: split on runs of whitespace, preserving the
+   * whitespace in the output.  Each non-whitespace segment is one "word"
+   * for the purpose of special-word detection.  This is O(n) because every
+   * character is visited exactly once across all operations.
+   *
    * Properties:
    *   • Deterministic  — identical input always yields identical output
    *   • Idempotent     — processText(processText(x)) === processText(x)
    *   • Unicode-safe   — operates on Unicode code points, not UTF-16 units
-   *   • O(n)           — single pass over grapheme clusters
+   *   • O(n)           — single pass over tokens and their clusters
    *
    * @param  {string} text
    * @returns {string}
    */
   function processText(text) {
     if (!text) return "";
-    return parseGraphemes(text.normalize("NFD"))
-      .map(transformCluster)
-      .join("")
-      .normalize("NFC");
+
+    // Split into alternating [word, whitespace, word, whitespace, …] segments.
+    // The capturing group keeps the whitespace delimiters in the array.
+    const segments = text.split(/(\s+)/);
+
+    const out = [];
+
+    for (const segment of segments) {
+      // Whitespace runs are passed through verbatim.
+      if (/^\s/.test(segment)) {
+        out.push(segment);
+        continue;
+      }
+
+      // For each word token: determine whether it is a protected special word.
+      // This check is O(k) where k = token length — no global backtracking.
+      const suppressHolamVav = isSpecialWord(segment);
+
+      // Process every grapheme cluster in the token, forwarding the flag.
+      const processed = parseGraphemes(segment.normalize("NFD"))
+        .map(cluster => transformCluster(cluster, suppressHolamVav))
+        .join("")
+        .normalize("NFC");
+
+      out.push(processed);
+    }
+
+    return out.join("");
   }
 
   return Object.freeze({ processText });
@@ -993,13 +1160,4 @@ const DAGESH_KEEP = new Set([L.BET, L.KAF, L.PE, L.VAV]);
     showStatus("Cleared");
   };
 
-  /* ── PWA — fail silently ─────────────────────────────────────── */
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("sw.js").catch(() => {});
-  }
-
-}());
-</script>
-
-</body>
-</html>
+  /* ── PWA — fail silently ─────────────────────────────────────�
